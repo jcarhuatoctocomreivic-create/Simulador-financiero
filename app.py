@@ -7,10 +7,19 @@ import io
 # --- CONFIGURACIÓN DE LA PÁGINA WEB ---
 st.set_page_config(page_title="Simulador Financiero COMREIVIC", layout="wide", page_icon="📊")
 
-# Verificar si existe el logo en el servidor web
-logo_path = 'logo.png'
-if os.path.exists(logo_path):
-    st.image(logo_path, width=250)
+# FUNCIÓN INTELIGENTE PARA DETECTAR EL LOGO EN EL SERVIDOR
+def encontrar_archivo_logo():
+    opciones = ['logo.png', 'logo.png.png', 'logo_empresa.png', 'logo_empresa.png.png', 'LOGO.PNG', 'Logo.png']
+    for opcion in opciones:
+        if os.path.exists(opcion):
+            return opcion
+    return None
+
+archivo_logo_real = encontrar_archivo_logo()
+
+# Cargar el logo dinámicamente en la web si existe
+if archivo_logo_real:
+    st.image(archivo_logo_real, width=250)
 
 st.title("📊 Simulador Financiero Interactiva")
 st.markdown("---")
@@ -61,26 +70,16 @@ else:
     matriz_credito = simular_tabla(saldo_credito, plazo, tasa)
     matriz_seguro = simular_tabla(seguro_total, plazo, tasa)
     
-    # --- SUMATORIA ARITMÉTICA ESTRICTA CORREGIDA ---
     matriz_combinado = []
     for idx in range(len(matriz_credito)):
         c = matriz_credito[idx]
         s = matriz_seguro[idx]
-        matriz_combinado.append([
-            c[0],               # Mes
-            c[1] + s[1],        # Saldo Inicial
-            c[2] + s[2],        # Amortización
-            c[3] + s[3],        # Interés
-            c[4] + s[4],        # Cuota
-            c[5] + s[5]         # Saldo Final
-        ])
+        matriz_combinado.append([c[0], c[1]+s[1], c[2]+s[2], c[3]+s[3], c[4]+s[4], c[5]+s[5]])
 
     cols_names = ['Mes', 'Saldo Inicial', 'Amortización', 'Interés', 'Cuota', 'Saldo Final']
 
     # --- 3. PRESENTACIÓN EN LA WEB ---
     st.subheader("📋 Resumen General de la Cotización")
-    
-    # Corrección de extracción numérica para evitar el congelamiento de pantalla
     cuota_fija_combinada = matriz_combinado[0][4]
     
     col1, col2, col3 = st.columns(3)
@@ -125,8 +124,8 @@ else:
         for hoja, datos, s_inicial in pestanas:
             ws = workbook.add_worksheet(hoja)
             writer.sheets[hoja] = ws
-            if os.path.exists(logo_path):
-                ws.insert_image('A1', logo_path, {'x_scale': 0.5, 'y_scale': 0.5})
+            if archivo_logo_real:
+                ws.insert_image('A1', archivo_logo_real, {'x_scale': 0.5, 'y_scale': 0.5})
             
             # Cabecera de la Imagen Vacía
             ws.write('A3', ' CLIENTE :', f_cab_label); ws.merge_range('B3:D3', '', f_cab_val)
@@ -151,7 +150,7 @@ else:
 
             r_act = 14
             for fila_d in datos:
-                ws.write(r_act, 0, int(fila_d[0]), f_txt) # Extracción limpia del entero
+                ws.write(r_act, 0, int(fila_d[0]), f_txt)
                 for c_idx in range(1, 6): ws.write(r_act, c_idx, float(fila_d[c_idx]), f_num)
                 r_act += 1
 
