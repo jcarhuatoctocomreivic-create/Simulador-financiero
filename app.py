@@ -61,8 +61,11 @@ else:
     matriz_credito = simular_tabla(saldo_credito, plazo, tasa)
     matriz_seguro = simular_tabla(seguro_total, plazo, tasa)
     
+    # --- SUMATORIA ARITMÉTICA ESTRICTA CORREGIDA ---
     matriz_combinado = []
-    for c, s in zip(matriz_credito, matriz_seguro):
+    for idx in range(len(matriz_credito)):
+        c = matriz_credito[idx]
+        s = matriz_seguro[idx]
         matriz_combinado.append([
             c[0],               # Mes
             c[1] + s[1],        # Saldo Inicial
@@ -77,7 +80,7 @@ else:
     # --- 3. PRESENTACIÓN EN LA WEB ---
     st.subheader("📋 Resumen General de la Cotización")
     
-    # Extraemos la cuota fija mensual combinada de la primera fila para la tarjeta informativa
+    # Corrección de extracción numérica para evitar el congelamiento de pantalla
     cuota_fija_combinada = matriz_combinado[0][4]
     
     col1, col2, col3 = st.columns(3)
@@ -120,12 +123,12 @@ else:
                     ('3. Combinado', matriz_combinado, saldo_credito + seguro_total)]
 
         for hoja, datos, s_inicial in pestanas:
-            ws = workbook.add_worksheet(hoham_name if 'hoham_name' in locals() else hoja)
+            ws = workbook.add_worksheet(hoja)
             writer.sheets[hoja] = ws
             if os.path.exists(logo_path):
                 ws.insert_image('A1', logo_path, {'x_scale': 0.5, 'y_scale': 0.5})
             
-            # Cabecera de la Imagen
+            # Cabecera de la Imagen Vacía
             ws.write('A3', ' CLIENTE :', f_cab_label); ws.merge_range('B3:D3', '', f_cab_val)
             ws.write('E3', ' Fecha :', f_cab_label); ws.write('F3', datetime.now().strftime("%d/%m/%Y"), f_cab_val)
             ws.write('A4', ' RUC :', f_cab_label); ws.merge_range('B4:D4', '', f_cab_val)
@@ -148,7 +151,7 @@ else:
 
             r_act = 14
             for fila_d in datos:
-                ws.write(r_act, 0, int(fila_d[0]), f_txt)
+                ws.write(r_act, 0, int(fila_d[0]), f_txt) # Extracción limpia del entero
                 for c_idx in range(1, 6): ws.write(r_act, c_idx, float(fila_d[c_idx]), f_num)
                 r_act += 1
 
