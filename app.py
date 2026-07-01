@@ -63,16 +63,27 @@ else:
     
     matriz_combinado = []
     for c, s in zip(matriz_credito, matriz_seguro):
-        matriz_combinado.append([c[0], c[1]+s[1], c[2]+s[2], c[3]+s[3], c[4]+s[4], c[5]+s[5]])
+        matriz_combinado.append([
+            c[0],               # Mes
+            c[1] + s[1],        # Saldo Inicial
+            c[2] + s[2],        # Amortización
+            c[3] + s[3],        # Interés
+            c[4] + s[4],        # Cuota
+            c[5] + s[5]         # Saldo Final
+        ])
 
     cols_names = ['Mes', 'Saldo Inicial', 'Amortización', 'Interés', 'Cuota', 'Saldo Final']
 
     # --- 3. PRESENTACIÓN EN LA WEB ---
     st.subheader("📋 Resumen General de la Cotización")
+    
+    # Extraemos la cuota fija mensual combinada de la primera fila para la tarjeta informativa
+    cuota_fija_combinada = matriz_combinado[0][4]
+    
     col1, col2, col3 = st.columns(3)
     col1.metric("Saldo Crédito a Financiar", f"${saldo_credito:,.2f}")
     col2.metric("Saldo Seguro Financiado", f"${seguro_total:,.2f}")
-    col3.metric("Cuota Mensual Combinada", f"${(matriz_combinado[0][4]):,.2f}")
+    col3.metric("Cuota Mensual Combinada", f"${cuota_fija_combinada:,.2f}")
 
     st.markdown("**Fórmula Informativa de Seguro Aplicada:**")
     st.latex(r"\text{Seguro Total} = \text{Precio Total} \times \left(\frac{4.7}{1000}\right) \times 1.03 \times 1.18")
@@ -109,7 +120,7 @@ else:
                     ('3. Combinado', matriz_combinado, saldo_credito + seguro_total)]
 
         for hoja, datos, s_inicial in pestanas:
-            ws = workbook.add_worksheet(hoja)
+            ws = workbook.add_worksheet(hoham_name if 'hoham_name' in locals() else hoja)
             writer.sheets[hoja] = ws
             if os.path.exists(logo_path):
                 ws.insert_image('A1', logo_path, {'x_scale': 0.5, 'y_scale': 0.5})
@@ -136,9 +147,9 @@ else:
             for col_idx, text in enumerate(cols_names): ws.write(13, col_idx, text, f_th)
 
             r_act = 14
-            for fila in datos:
-                ws.write(r_act, 0, int(fila[0]), f_txt)
-                for c_idx in range(1, 6): ws.write(r_act, c_idx, float(fila[c_idx]), f_num)
+            for fila_d in datos:
+                ws.write(r_act, 0, int(fila_d[0]), f_txt)
+                for c_idx in range(1, 6): ws.write(r_act, c_idx, float(fila_d[c_idx]), f_num)
                 r_act += 1
 
             ws.write(r_act, 0, 'TOTAL', f_tot); ws.write(r_act, 1, s_inicial, f_tot_num)
