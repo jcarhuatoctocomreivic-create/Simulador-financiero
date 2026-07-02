@@ -175,7 +175,7 @@ else:
             ws.write('E3', ' Fecha :', f_cab_label); ws.write('F3', datetime.now().strftime("%d/%m/%Y"), f_cab_val)
             ws.write('A4', ' RUC/DNI :', f_cab_label); ws.merge_range('B4:D4', cliente_ruc, f_cab_val)
             ws.write('E4', ' Teléfono :', f_cab_label); ws.write('F4', cliente_tel, f_cab_val)
-            ws.write('A5', ' DirecciónN :', f_cab_label); ws.merge_range('B5:F5', cliente_dir, f_cab_val)
+            ws.write('A5', ' Dirección :', f_cab_label); ws.merge_range('B5:F5', cliente_dir, f_cab_val)
             ws.write('A6', ' Aval :', f_cab_label); ws.merge_range('B6:D6', cliente_aval, f_cab_val)
             ws.write('E6', ' Teléfono Aval :', f_cab_label); ws.write('F6', cliente_tel_aval, f_cab_val)
             ws.write('A7', ' DNI Aval :', f_cab_label); ws.merge_range('B7:F7', cliente_dni, f_cab_val)
