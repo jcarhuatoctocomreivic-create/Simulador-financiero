@@ -98,13 +98,25 @@ else:
     
     def mostrar_web(tab_obj, datos, inicial, nombres_columnas):
         df = pd.DataFrame(datos, columns=nombres_columnas)
+        
+        # Generar fila totalizadora limpia
         tot = {'Mes': 'TOTAL', 'Fecha Pago': '', 'Saldo Inicial': inicial, 'Saldo Final': 0.0}
         for col in nombres_columnas:
             if col in ['Amortización', 'Interés', 'Cuota', 'Cuota Financiamiento', 'Cuota Seguro', 'Cuota Combinada Total']:
                 tot[col] = df[col].sum()
+                
         df_v = pd.concat([df, pd.DataFrame([tot])], ignore_index=True)
-        tab_obj.dataframe(df_v.style.format({c: "${:,.2f}" for c in nombres_columnas if c not in ['Mes', 'Fecha Pago']}), use_container_width=True, hide_index=True)
-
+        
+        # SOLUCIÓN AL ERROR DE ARROW: Convertimos 'Mes' a string para que acepte el número y el texto 'TOTAL'
+        df_v['Mes'] = df_v['Mes'].astype(str)
+        
+        # SOLUCIÓN AL DEPRECATED: Reemplazamos use_container_width=True por width="stretch"
+        tab_obj.dataframe(
+            df_v.style.format({c: "${:,.2f}" for c in nombres_columnas if c not in ['Mes', 'Fecha Pago']}), 
+            width="stretch", 
+            hide_index=True
+        )
+        
     mostrar_web(tab1, matriz_credito, saldo_credito, cols_names_estandar)
     mostrar_web(tab2, matriz_seguro, seguro_total, cols_names_estandar)
     mostrar_web(tab3, matriz_combinado, saldo_credito + seguro_total, cols_names_combinado)
