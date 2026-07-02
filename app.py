@@ -168,12 +168,12 @@ else:
             
             ws.write('A3', ' CLIENTE :', f_cab_label); ws.merge_range('B3:D3', cliente_nom, f_cab_val)
             ws.write('E3', ' Fecha :', f_cab_label); ws.write('F3', datetime.now().strftime("%d/%m/%Y"), f_cab_val)
-            ws.write('A4', ' RUC :', f_cab_label); ws.merge_range('B4:D4', cliente_ruc, f_cab_val)
+            ws.write('A4', ' RUC/DNI :', f_cab_label); ws.merge_range('B4:D4', cliente_ruc, f_cab_val)
             ws.write('E4', ' Teléfono :', f_cab_label); ws.write('F4', cliente_tel, f_cab_val)
-            ws.write('A5', ' DIRECCION :', f_cab_label); ws.merge_range('B5:F5', cliente_dir, f_cab_val)
-            ws.write('A6', ' AVAL :', f_cab_label); ws.merge_range('B6:D6', cliente_aval, f_cab_val)
-            ws.write('E6', ' TELEFONO :', f_cab_label); ws.write('F6', cliente_tel_aval, f_cab_val)
-            ws.write('A7', ' DNI :', f_cab_label); ws.merge_range('B7:F7', cliente_dni, f_cab_val)
+            ws.write('A5', ' DirecciónN :', f_cab_label); ws.merge_range('B5:F5', cliente_dir, f_cab_val)
+            ws.write('A6', ' Aval :', f_cab_label); ws.merge_range('B6:D6', cliente_aval, f_cab_val)
+            ws.write('E6', ' Teléfono Aval :', f_cab_label); ws.write('F6', cliente_tel_aval, f_cab_val)
+            ws.write('A7', ' DNI Aval :', f_cab_label); ws.merge_range('B7:F7', cliente_dni, f_cab_val)
 
             max_col_letra = 'I' if es_combinado else 'G'
             ws.merge_range(f'A9:{max_col_letra}9', '📊 CONDICIONES DE FINANCIAMIENTO', f_bloq)
@@ -184,13 +184,13 @@ else:
             # Fila 11: Datos de la inicial
             ws.write('A11', 'Cuota Inicial ($):', f_cab_label); ws.write('B11', inicial_monto, f_num)
             ws.write('C11', 'Cuota Inicial (%):', f_cab_label); ws.write('D11', inicial_porc, f_porc)
-            ws.write('E11', 'Tramo Financiado:', f_cab_label); ws.write('F11', s_inicial, f_num)
+            ws.write('E11', 'Importe Financiado:', f_cab_label); ws.write('F11', s_inicial, f_num)
             
             # Fila 12: Plazo y Tasas
             ws.write('A12', 'Plazo Total:', f_cab_label); ws.write('B12', f"{plazo} meses", f_txt)
             ws.write('C12', 'Tasa Mes:', f_cab_label); ws.write('D12', f"{tasa}%", f_txt)
 
-            # AJUSTE DE FILAS PARA LA TABLA (Ahora empieza en la fila 14 en vez de la 13)
+            # AJUSTE DE FILAS PARA LA TABLA
             for col_idx, text in enumerate(cols_cab): 
                 ws.write(14, col_idx, text, f_th)
 
@@ -222,7 +222,7 @@ else:
 
     st.sidebar.markdown("---")
     st.sidebar.download_button(
-        label="📥 Descargar Excel Premium",
+        label="📥 Descargar Excel",
         data=buffer.getvalue(),
         file_name=f"Simulacion_{cliente_nom.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.xlsx",
         mime="application/vnd.ms-excel"
