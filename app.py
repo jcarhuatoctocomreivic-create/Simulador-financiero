@@ -24,6 +24,7 @@ cliente_tel = st.sidebar.text_input("Teléfono Cliente:", value="987654321")
 cliente_aval = st.sidebar.text_input("Aval / Fiador:", value="-")
 cliente_dni = st.sidebar.text_input("DNI Aval:", value="-")
 cliente_tel_aval = st.sidebar.text_input("Teléfono Aval:", value="-")
+tipo_maquina = st.sidebar.text_input("Tipo de Máquina:", value="Excavadora Hidráulica")
 
 st.sidebar.header("📝 Parámetros de Simulación")
 precio = st.sidebar.number_input("Precio Total ($):", min_value=1.0, value=20000.0, step=100.0)
@@ -176,17 +177,24 @@ else:
 
             max_col_letra = 'I' if es_combinado else 'G'
             ws.merge_range(f'A9:{max_col_letra}9', '📊 CONDICIONES DE FINANCIAMIENTO', f_bloq)
-            ws.write('A10', 'Precio Bien:', f_cab_label); ws.write('B10', precio, f_num)
-            ws.write('C10', 'Cuota Inicial ($):', f_cab_label); ws.write('D10', inicial_monto, f_num)
-            ws.write('E10', 'Cuota Inicial (%):', f_cab_label); ws.write('F10', inicial_porc, f_porc)
-            ws.write('A11', 'Tramo Financiado:', f_cab_label); ws.write('B11', s_inicial, f_num)
-            ws.write('C11', 'Plazo Total:', f_cab_label); ws.write('D11', f"{plazo} meses", f_txt)
-            ws.write('E11', 'Tasa Mes:', f_cab_label); ws.write('F11', f"{tasa}%", f_txt)
+            # Fila 10: Datos del bien y el tipo de máquina
+            ws.write('A10', 'Tipo Máquina:', f_cab_label); ws.merge_range('B10:D10', tipo_maquina, f_cab_val)
+            ws.write('E10', 'Precio Bien:', f_cab_label); ws.write('F10', precio, f_num)
+            
+            # Fila 11: Datos de la inicial
+            ws.write('A11', 'Cuota Inicial ($):', f_cab_label); ws.write('B11', inicial_monto, f_num)
+            ws.write('C11', 'Cuota Inicial (%):', f_cab_label); ws.write('D11', inicial_porc, f_porc)
+            ws.write('E11', 'Tramo Financiado:', f_cab_label); ws.write('F11', s_inicial, f_num)
+            
+            # Fila 12: Plazo y Tasas
+            ws.write('A12', 'Plazo Total:', f_cab_label); ws.write('B12', f"{plazo} meses", f_txt)
+            ws.write('C12', 'Tasa Mes:', f_cab_label); ws.write('D12', f"{tasa}%", f_txt)
 
+            # AJUSTE DE FILAS PARA LA TABLA (Ahora empieza en la fila 14 en vez de la 13)
             for col_idx, text in enumerate(cols_cab): 
-                ws.write(13, col_idx, text, f_th)
+                ws.write(14, col_idx, text, f_th)
 
-            r_act = 14
+            r_act = 15
             for fila in datos:
                 ws.write(r_act, 0, int(fila[0]), f_txt)
                 ws.write(r_act, 1, str(fila[1]), f_txt)
