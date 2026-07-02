@@ -155,7 +155,7 @@ else:
         f_bloq = workbook.add_format({'font_name': 'Arial', 'font_size': 10, 'bold': True, 'bg_color': '#EAF0F6', 'border': 1, 'align': 'center'})
 
         pestanas = [
-            ('1. Credito', matriz_credito, saldo_credito, cols_names_estandar, False), 
+            ('1. Crédito', matriz_credito, saldo_credito, cols_names_estandar, False), 
             ('2. Seguro', matriz_seguro, seguro_total, cols_names_estandar, False), 
             ('3. Combinado', matriz_combinado, saldo_credito + seguro_total, cols_names_combinado, True)
         ]
