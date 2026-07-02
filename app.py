@@ -29,7 +29,25 @@ st.sidebar.header("📝 Parámetros de Simulación")
 precio = st.sidebar.number_input("Precio Total ($):", min_value=1.0, value=20000.0, step=100.0)
 
 tipo_inicial = st.sidebar.radio("Tipo de Cuota Inicial:", ["Importe ($)", "Porcentaje (%)"])
-valor_inicial = st.sidebar.number_input("Valor de la Inicial:", min_value=0.0, value=2000.0, step=100.0)
+
+# Asignar un valor inicial por defecto coherente según la selección
+if tipo_inicial == "Porcentaje (%)":
+    valor_defecto = 10.0  # 10% por defecto
+    paso_cambio = 1.0     # Cambios de 1 en 1 por ciento
+    max_permisible = 100.0
+else:
+    valor_defecto = 2000.0 # $2000 por defecto
+    paso_cambio = 100.0    # Cambios de 100 en 100 dólares
+    max_permisible = float(precio)
+
+# El campo ahora adapta sus límites y su valor según el botón de arriba
+valor_inicial = st.sidebar.number_input(
+    "Valor de la Inicial:", 
+    min_value=0.0, 
+    max_value=max_permisible,
+    value=valor_defecto, 
+    step=paso_cambio
+)
 
 if precio > 0:
     if tipo_inicial == "Porcentaje (%)":
