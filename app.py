@@ -8,7 +8,7 @@ import io
 # --- CONFIGURACIÓN DE LA PÁGINA WEB ---
 st.set_page_config(page_title="Simulador Financiero COMREIVIC", layout="wide", page_icon="📊")
 
-logo_path = 'logo.png'
+logo_path = 'Logo.png'
 if os.path.exists(logo_path):
     st.image(logo_path, width=250)
 
