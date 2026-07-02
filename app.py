@@ -27,7 +27,9 @@ cliente_tel_aval = st.sidebar.text_input("Teléfono Aval:", value="-")
 tipo_maquina = st.sidebar.text_input("Tipo de Máquina:", value="Excavadora Hidráulica")
 
 st.sidebar.header("📝 Parámetros de Simulación")
-precio = st.sidebar.number_input("Precio Total ($):", min_value=1.0, value=200000.0, step=100.0, format="%,.2f")
+precio = st.sidebar.number_input("Precio Total ($):", min_value=1.0, value=200000.0, step=100.0, format="%.2f")
+# VISUAL ANCHOR: Mostramos al usuario el formato de miles y millones exacto inmediatamente abajo
+st.sidebar.write(f"💵 Monto ingresado: **${precio:,.2f}**")
 
 tipo_inicial = st.sidebar.radio("Tipo de Cuota Inicial:", ["Importe ($)", "Porcentaje (%)"])
 
@@ -36,10 +38,12 @@ if tipo_inicial == "Porcentaje (%)":
     valor_defecto = 10.0  # 10% por defecto
     paso_cambio = 1.0     # Cambios de 1 en 1 por ciento
     max_permisible = 100.0
+    formato_input = "%.2f"
 else:
     valor_defecto = 20000.0 # $2000 por defecto
     paso_cambio = 100.0    # Cambios de 100 en 100 dólares
     max_permisible = float(precio)
+    formato_input = "%.2f"
 
 # El campo ahora adapta sus límites y su valor según el botón de arriba
 valor_inicial = st.sidebar.number_input(
@@ -48,7 +52,7 @@ valor_inicial = st.sidebar.number_input(
     max_value=max_permisible,
     value=valor_defecto, 
     step=paso_cambio,
-    format="%,.2f"
+    format=formato_input
 )
 
 if precio > 0:
