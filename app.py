@@ -33,25 +33,26 @@ st.sidebar.write(f"💵 Monto ingresado: **${precio:,.2f}**")
 
 tipo_inicial = st.sidebar.radio("Tipo de Cuota Inicial:", ["Importe ($)", "Porcentaje (%)"])
 
-# Asignar un valor inicial por defecto coherente según la selección
+# # Asignar un valor inicial por defecto coherente según la selección
 if tipo_inicial == "Porcentaje (%)":
     valor_defecto = 10.0  # 10% por defecto
-    paso_cambio = 1.0     # Cambios de 1 en 1 por ciento
+    paso_cambio = 1.0  # Cambios de 1 en 1 por ciento
     max_permisible = 100.0
     formato_input = "%.2f"
 else:
-    valor_defecto = 20000.0 # $2000 por defecto
-    paso_cambio = 100.0    # Cambios de 100 en 100 dólares
+    # MODIFICACIÓN CLAVE: El valor por defecto ahora se adapta automáticamente al 10% del precio ingresado
+    valor_defecto = float(precio * 0.10)  
+    paso_cambio = 100.0  # Cambios de 100 en 100 dólares
     max_permisible = float(precio)
     formato_input = "%.2f"
 
-# El campo ahora adapta sus límites y su valor según el botón de arriba
+# El campo ahora adapta sus límites y su valor según el botón de arriba de forma segura
 valor_inicial = st.sidebar.number_input(
-    "Valor de la Inicial:", 
-    min_value=0.0, 
-    max_value=max_permisible,
-    value=valor_defecto, 
-    step=paso_cambio,
+    "Valor de la Inicial:",
+    min_value=0.0,
+    max_value=float(max_permisible),
+    value=float(valor_defecto),  # Forzamos conversión limpia a float para evitar conflictos de caché
+    step=float(paso_cambio),
     format=formato_input
 )
 
