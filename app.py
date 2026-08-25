@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
+#---from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
 import os
 import io
 
@@ -85,7 +86,8 @@ def simular_tabla(monto, meses, tasa_p):
         saldo -= amort
         if abs(saldo) < 0.01: saldo = 0
         
-        fecha_pago = (fecha_base + relativedelta(months=i)).strftime("%d/%m/%Y")
+        #---fecha_pago = (fecha_base + relativedelta(months=i)).strftime("%d/%m/%Y")
+        fecha_pago = (fecha_base + timedelta(days=30 * i)).strftime("%d/%m/%Y")
         cronograma.append([i, fecha_pago, s_ini, amort, interes, cuota, saldo])
     return cronograma
 
@@ -163,7 +165,8 @@ else:
         pestanas = [
             ('1. Crédito', matriz_credito, saldo_credito, cols_names_estandar, False), 
             ('2. Seguro', matriz_seguro, seguro_total, cols_names_estandar, False), 
-            ('3. Combinado', matriz_combinado, saldo_credito + seguro_total, cols_names_combinado, True)
+            #--('3. Combinado', matriz_combinado, saldo_credito + seguro_total, cols_names_combinado, True)
+            ('3. Combinado', matriz_combinado, saldo_credito, cols_names_combinado, True)
         ]
 
         for hoja, datos, s_inicial, cols_cab, es_combinado in pestanas:
