@@ -1,2 +1,7 @@
+streamlit
 pandas
+reportlab
 xlsxwriter
+openpyxl
+Pillow
+python-dateutil
