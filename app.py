@@ -117,6 +117,8 @@ else:
 
     matriz_credito = simular_tabla(saldo_credito, plazo, tasa)
     matriz_seguro = simular_tabla(seguro_total, plazo, tasa)
+
+    seguro_financiado_total = sum(fila[5] for fila in matriz_seguro)
     
     # --- CRONOGRAMA COMBINADO ---
     # Los valores financieros corresponden únicamente al equipo/maquinaria.
@@ -164,11 +166,12 @@ else:
     st.subheader("📋 Resumen General de la Cotización")
     col1, col2, col3 = st.columns(3)
     col1.metric("Saldo Crédito a Financiar", f"${saldo_credito:,.2f}")
-    col2.metric("Saldo Seguro Financiado", f"${seguro_total:,.2f}")
+    #col2.metric("Saldo Seguro Financiado", f"${seguro_total:,.2f}")
+    col2.metric("Seguro Total", f"${seguro_financiado_total:,.2f}")
     col3.metric("Cuota Mensual Combinada", f"${matriz_combinado[0][6]:,.2f}")
 
     st.markdown("**Fórmula Informativa de Seguro Aplicada:**")
-    st.latex(r"\text{Seguro Total} = \text{Precio Total} \times \left(\frac{4.7}{1000}\right) \times 1.03 \times 1.18")
+    st.latex(r"\text{Seguro} = \text{Precio Total} \times \left(\frac{4.7}{1000}\right) \times 1.03 \times 1.18")
 
     tab1, tab2, tab3 = st.tabs(["🧱 1. Cronograma de Crédito", "🛡️ 2. Cronograma de Seguro", "🔄 3. Cronograma Combinado Total"])
     
@@ -499,7 +502,7 @@ else:
                 "Tasa Mensual",
                 f"{tasa:.2f}%",
                 "Seguro Total",
-                f"${seguro_total:,.2f}"
+                f"${seguro_financiado_total:,.2f}"
             ]
         ]
 
@@ -600,10 +603,10 @@ else:
             'final integra equipo + seguro.',
             note_style
         ))
-        story.append(Paragraph(
-            'Seguro Total = Precio Total × (4.7 / 1000) × 1.03 × 1.18',
-            note_style
-        ))
+#        story.append(Paragraph(
+#            'Seguro Total = Precio Total × (4.7 / 1000) × 1.03 × 1.18',
+#            note_style
+#        ))
 
         doc.build(story)
         buffer.seek(0)
